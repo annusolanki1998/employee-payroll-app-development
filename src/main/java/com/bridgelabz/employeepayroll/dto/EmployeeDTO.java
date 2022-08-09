@@ -1,0 +1,14 @@
+package com.bridgelabz.employeepayroll.dto;
+
+import lombok.Data;
+
+@Data
+public class EmployeeDTO {
+
+    private String firstName;
+    private String lastName;
+    private String companyName;
+    private long salary;
+    private String department;
+
+}
