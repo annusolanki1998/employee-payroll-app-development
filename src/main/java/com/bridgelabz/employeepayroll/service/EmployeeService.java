@@ -51,7 +51,18 @@ public class EmployeeService implements IEmployeeService {
             throw new EmployeeNotFoundException(400, "No DATA Present");
     }
 
+    @Override
+    public EmployeeModel deleteEmployee(Long id) {
+        Optional<EmployeeModel> isEmployeePresent = employeeRepository.findById(id);
+        if (isEmployeePresent.isPresent()) {
+            employeeRepository.delete(isEmployeePresent.get());
+            return isEmployeePresent.get();
+        }
+        throw new EmployeeNotFoundException(400, "Employee Not Present");
+    }
 }
+
+
 
 
 
