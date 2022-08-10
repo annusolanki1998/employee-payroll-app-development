@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,6 +41,17 @@ public class EmployeeService implements IEmployeeService {
         }
         throw new EmployeeNotFoundException(400, "Employee Not Present");
     }
+
+    @Override
+    public List<EmployeeModel> getEmployee() {
+        List<EmployeeModel> getallemployee = employeeRepository.findAll();
+        if (getallemployee.size() > 0)
+            return getallemployee;
+        else
+            throw new EmployeeNotFoundException(400, "No DATA Present");
+    }
+
 }
+
 
 
