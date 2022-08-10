@@ -4,6 +4,7 @@ package com.bridgelabz.employeepayroll.controller;
 import com.bridgelabz.employeepayroll.dto.EmployeeDTO;
 import com.bridgelabz.employeepayroll.model.EmployeeModel;
 import com.bridgelabz.employeepayroll.service.IEmployeeService;
+import com.bridgelabz.employeepayroll.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,13 +28,18 @@ public class EmployeeController {
     }
 
     @GetMapping("/getemployeedata")
-    public List<EmployeeModel> getEmployee(){
-        return employeeService.getEmployee();
+    public List<EmployeeModel> getEmployee(@RequestHeader String token) {
+        return employeeService.getEmployee(token);
     }
 
     @DeleteMapping("deleteemployee/{id}")
-    public EmployeeModel deleteemployee(@PathVariable Long id){
+    public EmployeeModel deleteemployee(@PathVariable Long id) {
         return employeeService.deleteEmployee(id);
+    }
+
+    @PostMapping("/login")
+    public Response login(@RequestParam String email, @RequestParam String password) {
+        return employeeService.login(email, password);
     }
 
 

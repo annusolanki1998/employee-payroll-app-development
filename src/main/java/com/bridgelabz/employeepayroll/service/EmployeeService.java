@@ -5,6 +5,8 @@ import com.bridgelabz.employeepayroll.dto.EmployeeDTO;
 import com.bridgelabz.employeepayroll.exception.EmployeeNotFoundException;
 import com.bridgelabz.employeepayroll.model.EmployeeModel;
 import com.bridgelabz.employeepayroll.repository.EmployeeRepository;
+import com.bridgelabz.employeepayroll.util.Response;
+import com.bridgelabz.employeepayroll.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ public class EmployeeService implements IEmployeeService {
 
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    TokenUtil tokenUtil;
 
     @Override
     public EmployeeModel addEmployee(EmployeeDTO employeeDTO) {
@@ -43,7 +47,9 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public List<EmployeeModel> getEmployee() {
+    public List<EmployeeModel> getEmployee(String token) {
+        Long empId = tokenUtil.decodeToken(token);
+        Optional<EmployeeModel> isEmployeePresent = employeeRepository.findById(empId);
         List<EmployeeModel> getallemployee = employeeRepository.findAll();
         if (getallemployee.size() > 0)
             return getallemployee;
@@ -60,6 +66,21 @@ public class EmployeeService implements IEmployeeService {
         }
         throw new EmployeeNotFoundException(400, "Employee Not Present");
     }
+
+    @Override
+    public Response login(String email, String password) {
+        Optional<EmployeeModel> isEmailPresent = employeeRepository.findByEmailId(email);
+        if (isEmailPresent.isPresent()) {
+            if (isEmailPresent.get().getPassword().equals(password)) {
+                String token = tokenUtil.createToken(isEmailPresent.get().getEmployeeId());
+                return new Response(200, "login succesfull", token);
+            }
+            throw new EmployeeNotFoundException(400, "Invald credentials");
+        }
+        throw new EmployeeNotFoundException(400, "Employee not found");
+    }
+
+
 }
 
 
