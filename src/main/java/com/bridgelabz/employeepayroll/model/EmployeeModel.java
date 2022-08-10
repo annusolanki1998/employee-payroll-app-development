@@ -4,10 +4,7 @@ package com.bridgelabz.employeepayroll.model;
 import com.bridgelabz.employeepayroll.dto.EmployeeDTO;
 import lombok.Data;
 
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,11 +13,11 @@ import java.time.LocalDateTime;
 public class EmployeeModel {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long employeeId;
     private String firstName;
     private String lastName;
     private String companyName;
-
     private long salary;
     private String department;
     private LocalDateTime registerDate;
@@ -37,4 +34,5 @@ public class EmployeeModel {
     public EmployeeModel() {
 
     }
+
 }
