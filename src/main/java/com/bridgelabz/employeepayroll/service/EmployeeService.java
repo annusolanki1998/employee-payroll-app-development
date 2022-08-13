@@ -21,12 +21,18 @@ public class EmployeeService implements IEmployeeService {
     EmployeeRepository employeeRepository;
     @Autowired
     TokenUtil tokenUtil;
+    @Autowired
+    MailService mailService;
 
     @Override
     public EmployeeModel addEmployee(EmployeeDTO employeeDTO) {
         EmployeeModel employeeModel = new EmployeeModel(employeeDTO);
         employeeModel.setRegisterDate(LocalDateTime.now());
         employeeRepository.save(employeeModel);
+        String body = "Employee is added successfully with employeeId " + employeeModel.getEmployeeId();
+        String subject = "Employee registration successful";
+        mailService.send(employeeModel.getEmailId(), subject, body);
+
         return employeeModel;
     }
 
@@ -48,13 +54,16 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public List<EmployeeModel> getEmployee(String token) {
-        Long empId = tokenUtil.decodeToken(token);
-        Optional<EmployeeModel> isEmployeePresent = employeeRepository.findById(empId);
-        List<EmployeeModel> getallemployee = employeeRepository.findAll();
-        if (getallemployee.size() > 0)
-            return getallemployee;
-        else
-            throw new EmployeeNotFoundException(400, "No DATA Present");
+        Long empId=tokenUtil.decodeToken(token);
+        Optional<EmployeeModel> isEmployeePresent=employeeRepository.findById(empId);
+        if(isEmployeePresent.isPresent()) {
+            List<EmployeeModel> getallemployee = employeeRepository.findAll();
+            if (getallemployee.size() > 0)
+                return getallemployee;
+            else
+                throw new EmployeeNotFoundException(400, "No DATA Present");
+        }
+        throw new EmployeeNotFoundException(400,"Employee Not found");
     }
 
     @Override
