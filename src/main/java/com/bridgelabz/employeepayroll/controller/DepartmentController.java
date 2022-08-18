@@ -6,6 +6,7 @@ import com.bridgelabz.employeepayroll.service.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -15,12 +16,12 @@ public class DepartmentController {
     IDepartmentService departmentService;
 
     @PostMapping("/adddepartment")
-    public EmployeeDepartment adddepartment(@RequestBody DepartmentDTO departmentDTO) {
+    public EmployeeDepartment adddepartment(@Valid @RequestBody DepartmentDTO departmentDTO) {
         return departmentService.addDepartment(departmentDTO);
     }
 
     @PutMapping("/updatedepartment/{id}")
-    public EmployeeDepartment updateDepartment(@RequestBody DepartmentDTO departmentDTO, @PathVariable Long id) {
+    public EmployeeDepartment updateDepartment(@Valid @RequestBody DepartmentDTO departmentDTO, @PathVariable Long id) {
         return departmentService.updateDepartment(departmentDTO, id);
     }
 

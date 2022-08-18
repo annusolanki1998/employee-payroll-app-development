@@ -25,6 +25,9 @@ public class EmployeeModel {
     private LocalDateTime updateDate;
     private String emailId;
     private String password;
+    private String gender;
+    private String note;
+    private String profilePic;
 
     public EmployeeModel(EmployeeDTO employeeDTO) {
         this.firstName = employeeDTO.getFirstName();
@@ -33,6 +36,9 @@ public class EmployeeModel {
         this.companyName = employeeDTO.getCompanyName();
         this.emailId = employeeDTO.getEmailId();
         this.password = employeeDTO.getPassword();
+        this.gender = employeeDTO.getGender();
+        this.note = employeeDTO.getNote();
+        this.profilePic = employeeDTO.getProfilePic();
     }
 
     public EmployeeModel() {

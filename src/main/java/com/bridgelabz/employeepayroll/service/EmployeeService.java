@@ -114,6 +114,26 @@ public class EmployeeService implements IEmployeeService {
     }
 
 
+    @Override
+    public List<EmployeeModel> findByFirstName(String firstName) {
+        List<EmployeeModel> isFirstName = employeeRepository.findFirstName(firstName);
+        if (isFirstName.isEmpty()) {
+            throw new EmployeeNotFoundException(400, "Employee not found with this name");
+        } else {
+            return isFirstName;
+        }
+    }
+    @Override
+    public List<EmployeeModel> orderByLastName() {
+        List<EmployeeModel> isLastName = employeeRepository.orderByLastName();
+        if (isLastName.size() > 0) {
+            return isLastName;
+        } else {
+            throw new EmployeeNotFoundException(400, "no Employee found");
+        }
+    }
+
+
 }
 
 
