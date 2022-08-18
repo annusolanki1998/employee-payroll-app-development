@@ -8,15 +8,15 @@ import java.util.List;
 
 
 public interface IEmployeeService {
-    EmployeeModel addEmployee(EmployeeDTO employeeDTO);
+    EmployeeModel addEmployee(EmployeeDTO employeeDTO, Long departmentId);
 
-    EmployeeModel updateEmployee(long id, EmployeeDTO employeeDTO);
+    EmployeeModel updateEmployee(long id, EmployeeDTO employeeDTO, Long departmentId);
 
     List<EmployeeModel> getEmployee(String token);
 
     EmployeeModel deleteEmployee(Long id);
 
     Response login(String email, String password);
-
-
 }
+
+

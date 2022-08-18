@@ -18,13 +18,13 @@ public class EmployeeController {
     IEmployeeService employeeService;
 
     @PostMapping("/addemployee")
-    public EmployeeModel addEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        return employeeService.addEmployee(employeeDTO);
+    public EmployeeModel addEmployee(@RequestBody EmployeeDTO employeeDTO, @RequestParam Long departmentId) {
+        return employeeService.addEmployee(employeeDTO, departmentId);
     }
 
     @PutMapping("/updateemployee/{id}")
-    public EmployeeModel updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable long id) {
-        return employeeService.updateEmployee(id, employeeDTO);
+    public EmployeeModel updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable long id, @RequestParam Long departmentId) {
+        return employeeService.updateEmployee(id, employeeDTO,departmentId);
     }
 
     @GetMapping("/getemployeedata")

@@ -3,7 +3,9 @@ package com.bridgelabz.employeepayroll.service;
 
 import com.bridgelabz.employeepayroll.dto.EmployeeDTO;
 import com.bridgelabz.employeepayroll.exception.EmployeeNotFoundException;
+import com.bridgelabz.employeepayroll.model.EmployeeDepartment;
 import com.bridgelabz.employeepayroll.model.EmployeeModel;
+import com.bridgelabz.employeepayroll.repository.DepartmentRepository;
 import com.bridgelabz.employeepayroll.repository.EmployeeRepository;
 import com.bridgelabz.employeepayroll.util.Response;
 import com.bridgelabz.employeepayroll.util.TokenUtil;
@@ -24,26 +26,35 @@ public class EmployeeService implements IEmployeeService {
     @Autowired
     MailService mailService;
 
-    @Override
-    public EmployeeModel addEmployee(EmployeeDTO employeeDTO) {
-        EmployeeModel employeeModel = new EmployeeModel(employeeDTO);
-        employeeModel.setRegisterDate(LocalDateTime.now());
-        employeeRepository.save(employeeModel);
-        String body = "Employee is added successfully with employeeId " + employeeModel.getEmployeeId();
-        String subject = "Employee registration successful";
-        mailService.send(employeeModel.getEmailId(), subject, body);
+    @Autowired
+    DepartmentRepository departmentRepository;
 
-        return employeeModel;
+    @Override
+    public EmployeeModel addEmployee(EmployeeDTO employeeDTO, Long departmentId) {
+        Optional<EmployeeDepartment> isDepartmentPresent = departmentRepository.findById(departmentId);
+        EmployeeModel employeeModel = new EmployeeModel(employeeDTO);
+        if (isDepartmentPresent.isPresent()) {
+            employeeModel.setEmployeeDepartment(isDepartmentPresent.get());
+            employeeModel.setRegisterDate(LocalDateTime.now());
+            employeeRepository.save(employeeModel);
+            String body = "Employee is added successfully with employeeId " + employeeModel.getEmployeeId();
+            String subject = "Employee registration successful";
+            mailService.send(employeeModel.getEmailId(), subject, body);
+            return employeeModel;
+        }
+        throw new EmployeeNotFoundException(400, "Department Not Present");
     }
 
+
     @Override
-    public EmployeeModel updateEmployee(long id, EmployeeDTO employeeDTO) {
+    public EmployeeModel updateEmployee(long id, EmployeeDTO employeeDTO, Long departmentId) {
+        Optional<EmployeeDepartment> isDepartmentPresent = departmentRepository.findById(departmentId);
+        if (isDepartmentPresent.isPresent()) {
         Optional<EmployeeModel> isEmployeePresent = employeeRepository.findById(id);
         if (isEmployeePresent.isPresent()) {
             isEmployeePresent.get().setFirstName(employeeDTO.getFirstName());
             isEmployeePresent.get().setLastName(employeeDTO.getLastName());
             isEmployeePresent.get().setCompanyName(employeeDTO.getCompanyName());
-            isEmployeePresent.get().setDepartment(employeeDTO.getDepartment());
             isEmployeePresent.get().setSalary(employeeDTO.getSalary());
             isEmployeePresent.get().setUpdateDate(LocalDateTime.now());
             employeeRepository.save(isEmployeePresent.get());
@@ -51,19 +62,21 @@ public class EmployeeService implements IEmployeeService {
         }
         throw new EmployeeNotFoundException(400, "Employee Not Present");
     }
+        throw new EmployeeNotFoundException(400, "Department Not Present");
+    }
 
     @Override
     public List<EmployeeModel> getEmployee(String token) {
-        Long empId=tokenUtil.decodeToken(token);
-        Optional<EmployeeModel> isEmployeePresent=employeeRepository.findById(empId);
-        if(isEmployeePresent.isPresent()) {
+        Long empId = tokenUtil.decodeToken(token);
+        Optional<EmployeeModel> isEmployeePresent = employeeRepository.findById(empId);
+        if (isEmployeePresent.isPresent()) {
             List<EmployeeModel> getallemployee = employeeRepository.findAll();
             if (getallemployee.size() > 0)
                 return getallemployee;
             else
                 throw new EmployeeNotFoundException(400, "No DATA Present");
         }
-        throw new EmployeeNotFoundException(400,"Employee Not found");
+        throw new EmployeeNotFoundException(400, "Employee Not found");
     }
 
     @Override
