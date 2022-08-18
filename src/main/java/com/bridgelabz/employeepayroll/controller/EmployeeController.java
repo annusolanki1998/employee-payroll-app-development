@@ -23,8 +23,8 @@ public class EmployeeController {
     }
 
     @PutMapping("/updateemployee/{id}")
-    public EmployeeModel updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable long id, @RequestParam Long departmentId) {
-        return employeeService.updateEmployee(id, employeeDTO,departmentId);
+    public EmployeeModel updateEmployee(@RequestBody EmployeeDTO employeeDTO, @PathVariable long id, @RequestParam Long departmentId,@RequestHeader String token) {
+        return employeeService.updateEmployee(id, employeeDTO,departmentId,token);
     }
 
     @GetMapping("/getemployeedata")
@@ -33,8 +33,8 @@ public class EmployeeController {
     }
 
     @DeleteMapping("deleteemployee/{id}")
-    public EmployeeModel deleteemployee(@PathVariable Long id) {
-        return employeeService.deleteEmployee(id);
+    public EmployeeModel deleteemployee(@PathVariable Long id, @RequestHeader String token) {
+        return employeeService.deleteEmployee(id,token);
     }
 
     @PostMapping("/login")

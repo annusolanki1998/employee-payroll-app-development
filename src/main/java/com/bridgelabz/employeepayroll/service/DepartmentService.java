@@ -26,21 +26,6 @@ public class DepartmentService implements  IDepartmentService {
         departmentRepository.save(employeeDepartment);
         return employeeDepartment;
     }
-
-//    @Override
-//    public EmployeeDepartment updateDepartment(DepartmentDTO departmentDTO, Long id) {
-//        return null;
-//    }
-
-//    @Override
-//    public List<EmployeeDepartment> getDepartments() {
-//        return null;
-//    }
-
-//    @Override
-//    public EmployeeDepartment deletedepartment(Long id) {
-//        return null;
-//    }
     @Override
     public EmployeeDepartment updateDepartment(DepartmentDTO departmentDTO, Long id) {
         Optional<EmployeeDepartment> isDepartmentPresent = departmentRepository.findById(id);
